@@ -1,0 +1,20 @@
+{
+  "name": "happy-new-year",
+  "version": "1.0.0",
+  "description": "新年祝福烟花网站",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=index.html",
+    "start": "live-server --port=3000 --open=index.html"
+  },
+  "keywords": [
+    "new-year",
+    "fireworks",
+    "celebration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

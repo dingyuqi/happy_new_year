@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>新年祝福 - 信封</title>
+  <link rel="stylesheet" href="envelope.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="envlope-wrapper">
+    <div id="envelope" class="close">
+        <div class="front flap"></div>
+        <div class="front pocket"></div>
+        <div class="letter">
+            <div class="words line1"></div>
+            <div class="words line2" id="recipient-line"></div>
+            <div class="words line3" style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: #d00000;">马年快乐</div>
+            <div class="words line4" id="sender-line"></div>
+        </div>
+        <div class="hearts">
+            <div class="heart a1"></div>
+            <div class="heart a2"></div>
+            <div class="heart a3"></div>
+        </div>
+    </div>
+</div>
+<div class="reset">
+    <button id="open">Open</button>
+</div>
+
+<!--
+
+Inspired by:
+
+    * https://medium.com/web-for-you/how-to-make-a-interactive-envelope-9df970614eea
+    * https://codepen.io/lisafolkerson/pen/BjRoJO
+
+-->
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+  <script src="envelope.js"></script>
+
+</body>
+</html>

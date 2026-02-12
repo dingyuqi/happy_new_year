@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年祝福 - 烟花模拟器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .wishlist {
+            margin-top: 10px;
+        }
+
+        .wish-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .wish-item input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .wish-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .add-wish {
+            background: #4ecdc4;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .add-wish:hover {
+            background: #45b7aa;
+        }
+
+        .move-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .move-btn:hover {
+            background: #ee5a52;
+        }
+
+        .remove-btn {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .remove-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .send-btn {
+            background: #ff6b6b;
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .send-btn:hover {
+            background: #ee5a52;
+        }
+
+        .link-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .link-container input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎆 马年祝福烟花 🎆</h1>
+
+        <form id="settings-form">
+            <div class="form-group">
+                <label for="sender">发件人</label>
+                <input type="text" id="sender" required placeholder="请输入您的名字">
+            </div>
+
+            <div class="form-group">
+                <label for="recipient">收件人</label>
+                <input type="text" id="recipient" required placeholder="请输入收件人名字">
+            </div>
+
+            <div class="form-group">
+                <label>祝福语（可添加多条，支持排序）</label>
+                <div id="wishlist" class="wishlist">
+                    <div class="wish-item">
+                        <input type="text" class="wish-input" value="新年快乐！" required>
+                        <div class="wish-controls">
+                            <button type="button" class="move-btn" onclick="moveWish(this, -1)">↑</button>
+                            <button type="button" class="move-btn" onclick="moveWish(this, 1)">↓</button>
+                            <button type="button" class="remove-btn" onclick="removeWish(this)">×</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="add-wish" onclick="addWish()">+ 添加祝福语</button>
+            </div>
+
+            <button type="submit" class="send-btn">发送祝福</button>
+        </form>
+
+        <div id="link-container" class="link-container">
+            <p>生成的祝福链接：</p>
+            <input type="text" id="generated-link" readonly>
+            <p style="margin-top: 10px; font-size: 14px; color: #666;">复制此链接发送给收件人</p>
+        </div>
+    </div>
+
+    <script>
+        // 添加祝福语
+        function addWish() {
+            const wishlist = document.getElementById('wishlist');
+            const wishItem = document.createElement('div');
+            wishItem.className = 'wish-item';
+            wishItem.innerHTML = `
+                <input type="text" class="wish-input" placeholder="请输入祝福语" required>
+                <div class="wish-controls">
+                    <button type="button" class="move-btn" onclick="moveWish(this, -1)">↑</button>
+                    <button type="button" class="move-btn" onclick="moveWish(this, 1)">↓</button>
+                    <button type="button" class="remove-btn" onclick="removeWish(this)">×</button>
+                </div>
+            `;
+            wishlist.appendChild(wishItem);
+        }
+
+        // 移动祝福语顺序
+        function moveWish(button, direction) {
+            const wishItem = button.closest('.wish-item');
+            const wishlist = wishItem.parentElement;
+            const items = Array.from(wishlist.children);
+            const index = items.indexOf(wishItem);
+
+            if (direction === -1 && index > 0) {
+                wishlist.insertBefore(wishItem, items[index - 1]);
+            } else if (direction === 1 && index < items.length - 1) {
+                wishlist.insertBefore(wishItem, items[index + 2]);
+            }
+        }
+
+        // 删除祝福语
+        function removeWish(button) {
+            const wishItem = button.closest('.wish-item');
+            if (wishItem.parentElement.children.length > 1) {
+                wishItem.remove();
+            } else {
+                alert('至少需要一条祝福语');
+            }
+        }
+
+        // 生成链接
+        document.getElementById('settings-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            try {
+                console.log('开始处理表单提交');
+
+                const sender = document.getElementById('sender').value;
+                const recipient = document.getElementById('recipient').value;
+                const wishInputs = document.querySelectorAll('.wish-input');
+                console.log('获取到的输入元素数量:', wishInputs.length);
+
+                const wishes = Array.from(wishInputs).map(input => input.value);
+                console.log('获取到的祝福语:', wishes);
+
+                // 验证输入
+                if (!sender.trim()) {
+                    alert('请输入发件人');
+                    return;
+                }
+
+                if (!recipient.trim()) {
+                    alert('请输入收件人');
+                    return;
+                }
+
+                if (wishes.some(wish => !wish.trim())) {
+                    alert('请填写所有祝福语');
+                    return;
+                }
+
+                const data = {
+                    sender,
+                    recipient,
+                    wishes
+                };
+                console.log('准备存储的数据:', data);
+
+                // 生成唯一标识符
+                const uniqueId = 'wish_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                console.log('生成的唯一ID:', uniqueId);
+
+                // 存储数据到localStorage
+                localStorage.setItem(uniqueId, JSON.stringify(data));
+                console.log('数据已存储到localStorage');
+
+                // 生成完整的绝对路径，包含协议、域名和端口
+                const link = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace('index.html', '')}envelope.html?id=${uniqueId}`;
+                console.log('生成的链接:', link);
+
+                document.getElementById('generated-link').value = link;
+                document.getElementById('link-container').style.display = 'block';
+
+            } catch (error) {
+                console.error('生成链接时出错:', error);
+                console.error('错误堆栈:', error.stack);
+                alert('生成链接时出错，请稍后再试\n错误信息: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

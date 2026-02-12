@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年祝福 - 烟花表演</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .message {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="message" id="fireworkMessage"></div>
+
+    <div class="controls">
+        <button class="back-btn" onclick="goBack()">返回首页</button>
+    </div>
+
+    <script>
+        // 解析URL参数
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // 加载数据
+        let wishData = null;
+        let currentWishIndex = 0;
+        
+        function loadWishData() {
+            const idParam = getUrlParam('id');
+            if (idParam) {
+                try {
+                    console.log('接收到的ID参数:', idParam);
+                    // 从localStorage中读取数据
+                    const storedData = localStorage.getItem(idParam);
+                    if (storedData) {
+                        console.log('从localStorage读取的数据:', storedData);
+                        wishData = JSON.parse(storedData);
+                        console.log('解析后的数据:', wishData);
+                        return wishData;
+                    } else {
+                        console.error('localStorage中没有找到对应的数据');
+                        alert('链接已过期或无效，请检查是否正确');
+                        // 使用默认祝福语
+                        wishData = { wishes: ['新年快乐！'] };
+                        return wishData;
+                    }
+                } catch (error) {
+                    console.error('数据解析错误:', error);
+                    console.error('错误堆栈:', error.stack);
+                    alert('链接无效，请检查是否正确\n错误信息: ' + error.message);
+                    // 使用默认祝福语
+                    wishData = { wishes: ['新年快乐！'] };
+                    return wishData;
+                }
+            } else {
+                alert('链接无效，请检查是否正确');
+                // 使用默认祝福语
+                wishData = { wishes: ['新年快乐！'] };
+                return wishData;
+            }
+        }
+        
+        // 获取下一条祝福语
+        function getNextWish() {
+            if (!wishData || !wishData.wishes || wishData.wishes.length === 0) {
+                return '新年快乐！';
+            }
+            const wish = wishData.wishes[currentWishIndex];
+            currentWishIndex = (currentWishIndex + 1) % wishData.wishes.length;
+            return wish;
+        }
+        
+        // 返回首页
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // 烟花模拟器 - 参考 GitHub 仓库实现
+        class Particle {
+            constructor(canvas, x, y, color) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 2 + 1;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 6,
+                    y: (Math.random() - 0.5) * 6
+                };
+                this.gravity = 0.1;
+                this.life = 1.0;
+                this.lifeDecay = Math.random() * 0.03 + 0.01;
+            }
+            
+            update() {
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.life -= this.lifeDecay;
+                return this.life > 0;
+            }
+            
+            draw() {
+                this.ctx.save();
+                this.ctx.globalAlpha = this.life;
+                this.ctx.fillStyle = this.color;
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.restore();
+            }
+        }
+        
+        class Firework {
+            constructor(canvas, x, y) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.x = x;
+                this.y = y;
+                this.color = this.getRandomColor();
+                this.particles = [];
+                this.particleCount = Math.floor(Math.random() * 100) + 50;
+                this.exploded = false;
+                this.wish = getNextWish();
+                this.showWish = Math.random() > 0.3; // 70%概率显示祝福语
+                this.wishOpacity = 1.0;
+                this.wishSize = 24;
+                
+                // 创建粒子
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push(new Particle(canvas, x, y, this.color));
+                }
+            }
+            
+            getRandomColor() {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff6600', '#9933ff'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            update() {
+                let activeParticles = 0;
+                for (const particle of this.particles) {
+                    if (particle.update()) {
+                        activeParticles++;
+                    }
+                }
+                
+                // 更新祝福语透明度
+                if (this.showWish) {
+                    this.wishOpacity -= 0.01;
+                }
+                
+                return activeParticles > 0 || this.wishOpacity > 0;
+            }
+            
+            draw() {
+                // 绘制粒子
+                for (const particle of this.particles) {
+                    particle.draw();
+                }
+                
+                // 绘制祝福语
+                if (this.showWish && this.wishOpacity > 0) {
+                    this.ctx.save();
+                    this.ctx.globalAlpha = this.wishOpacity;
+                    this.ctx.fillStyle = '#ffffff';
+                    this.ctx.font = `${this.wishSize}px Arial`;
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.shadowColor = '#000000';
+                    this.ctx.shadowBlur = 5;
+                    this.ctx.fillText(this.wish, this.x, this.y);
+                    this.ctx.restore();
+                }
+            }
+        }
+        
+        class FireworkLauncher {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.fireworks = [];
+                this.launchers = [];
+                this.initLaunchers();
+            }
+            
+            initLaunchers() {
+                const launcherCount = 10; // 更多发射器
+                for (let i = 0; i < launcherCount; i++) {
+                    this.launchers.push({
+                        x: (i + 1) * (this.canvas.width / (launcherCount + 1)),
+                        y: this.canvas.height,
+                        launchTimer: Math.random() * 2000,
+                        minLaunchInterval: 500,
+                        maxLaunchInterval: 1500
+                    });
+                }
+            }
+            
+            update(deltaTime) {
+                // 更新发射器
+                for (const launcher of this.launchers) {
+                    launcher.launchTimer -= deltaTime;
+                    if (launcher.launchTimer <= 0) {
+                        // 发射烟花
+                        this.fireworks.push(new Firework(
+                            this.canvas,
+                            launcher.x,
+                            this.canvas.height - Math.random() * 200 - 100
+                        ));
+                        // 重置发射计时器
+                        launcher.launchTimer = Math.random() * (launcher.maxLaunchInterval - launcher.minLaunchInterval) + launcher.minLaunchInterval;
+                    }
+                }
+                
+                // 更新烟花
+                this.fireworks = this.fireworks.filter(firework => {
+                    return firework.update();
+                });
+            }
+            
+            draw() {
+                for (const firework of this.fireworks) {
+                    firework.draw();
+                }
+            }
+        }
+        
+        // 初始化画布
+        function initCanvas() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            return { canvas, ctx };
+        }
+        
+        // 主循环
+        function main() {
+            const { canvas, ctx } = initCanvas();
+            const launcher = new FireworkLauncher(canvas);
+            
+            let lastTime = performance.now();
+            
+            function animate(currentTime) {
+                const deltaTime = currentTime - lastTime;
+                lastTime = currentTime;
+                
+                // 清空画布
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制背景星星效果
+                drawStars(ctx, canvas.width, canvas.height);
+                
+                // 更新和绘制烟花
+                launcher.update(deltaTime);
+                launcher.draw();
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate(performance.now());
+        }
+        
+        // 绘制星星背景
+        function drawStars(ctx, width, height) {
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            
+            // 随机绘制星星
+            for (let i = 0; i < 150; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const size = Math.random() * 2;
+                const opacity = Math.random() * 0.8 + 0.2;
+                
+                ctx.globalAlpha = opacity;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            ctx.restore();
+        }
+        
+        // 页面加载时初始化
+        window.onload = function() {
+            loadWishData();
+            main();
+        };
+    </script>
+</body>
+</html>
