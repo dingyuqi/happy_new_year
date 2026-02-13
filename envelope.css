@@ -233,7 +233,7 @@ body {
   justify-content: center;
   align-items: center;
   margin-top: 50px; /* Give some space for the letter to pop up */
-  transform: scale(1.1);
+  transform: scale(1.3); /* Increased from 1.1 */
 }
 
 .reset {
