@@ -930,6 +930,13 @@ function init() {
             soundManager.resumeAll();
         }
     }, 1000);
+    
+    // 微信特有的自动播放处理
+    document.addEventListener("WeixinJSBridgeReady", function () {
+        if (canPlaySoundSelector()) {
+            soundManager.resumeAll();
+        }
+    }, false);
 
 	// initial render
 	renderApp(store.state);

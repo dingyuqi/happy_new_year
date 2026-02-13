@@ -69,7 +69,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 25%, #ffd700 25%, #ffd700 27%, rgba(255, 255, 255, 0) 27%, rgba(255, 255, 255, 0) 74%, #ffd700 74%, #ffd700 76%, rgba(255, 255, 255, 0) 76%); /* 金色线条装饰 */
+  /* background-image removed to get rid of yellow lines */
   pointer-events: none; /* 确保不影响点击 */
   opacity: 0.2;
 }
@@ -277,6 +277,10 @@ body {
   
   .reset button {
     margin-top: 20px;
+  }
+
+  .copyright {
+    font-size: 14px; /* Ensure font size is consistent on mobile */
   }
 }
 
