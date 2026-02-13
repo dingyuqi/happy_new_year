@@ -28,7 +28,7 @@ $( document ).ready(function() {
                 // 存储数据到localStorage
                 localStorage.setItem(uniqueId, JSON.stringify(data));
                 // 跳转到烟花页面
-                window.location.href = `fireworks.html?id=${uniqueId}`;
+                window.location.href = `fireworks/index.html?id=${uniqueId}`;
             }
         }, 3000); // 等待动画完成
     }
