@@ -297,11 +297,11 @@ body {
     transform: translateX(-50%);
     background: linear-gradient(135deg, #d32f2f, #b71c1c);
     color: #ffd700;
-    padding: 12px 24px;
-    border-radius: 25px;
+    padding: 8px 16px; /* Decreased padding */
+    border-radius: 20px; /* Slightly smaller radius */
     text-decoration: none;
     font-family: "Russo One", arial, sans-serif;
-    font-size: 16px;
+    font-size: 14px; /* Decreased font size */
     z-index: 1000;
     box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
     transition: all 0.3s ease;
