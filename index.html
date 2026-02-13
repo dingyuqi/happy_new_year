@@ -18,8 +18,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: flex-start; /* 改为从顶部开始布局，配合padding实现垂直居中效果 */
+            padding: 40px 20px 60px; /* 增加底部padding给copyright留空间 */
+            box-sizing: border-box;
         }
 
         .container {
@@ -33,6 +34,7 @@
             width: 100%;
             text-align: center;
             animation: fadeIn 0.8s ease-out;
+            margin: auto 0; /* 自动上下边距实现垂直居中 */
         }
 
         @keyframes fadeIn {
@@ -246,6 +248,18 @@
             background: #45a049;
         }
 
+        .copyright {
+            /* position: absolute;  Removed absolute positioning */
+            margin-top: 20px;       /* Add margin to separate from content */
+            padding-bottom: 20px;   /* Add some bottom padding */
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-family: 'Arial', sans-serif;
+            flex-shrink: 0;         /* Prevent shrinking in flex layout */
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
@@ -321,6 +335,10 @@
             <button class="copy-btn" onclick="copyLink()">复制链接</button>
             <p style="margin-top: 10px; font-size: 14px; color: #666;">复制此链接发送给收件人</p>
         </div>
+    </div>
+
+    <div class="copyright">
+        Copyright © 2025 dingyuqi. All rights reserved.
     </div>
 
     <script src="js/lz-string.js"></script>

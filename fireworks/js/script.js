@@ -924,6 +924,13 @@ function init() {
 	// Begin simulation
 	togglePause(false);
 
+    // 尝试自动播放声音
+    setTimeout(() => {
+        if (canPlaySoundSelector()) {
+            soundManager.resumeAll();
+        }
+    }, 1000);
+
 	// initial render
 	renderApp(store.state);
 
@@ -2542,6 +2549,13 @@ const soundManager = {
 	resumeAll() {
 		// Play a sound with no volume for iOS. This 'unlocks' the audio context when the user first enables sound.
 		this.playSound("lift", 0);
+        
+        // 确保 AudioContext 是 running 状态
+        if (this.ctx.state === 'suspended') {
+            this.ctx.resume().then(() => {
+                console.log('AudioContext resumed successfully');
+            }).catch(e => console.error('Failed to resume AudioContext:', e));
+        }
 		// Chrome mobile requires interaction before starting audio context.
 		// The sound toggle button is triggered on 'touchstart', which doesn't seem to count as a full
 		// interaction to Chrome. I guess it needs a click? At any rate if the first thing the user does

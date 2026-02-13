@@ -290,6 +290,34 @@ body {
 	text-decoration: underline;
 }
 
+.home-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #d32f2f, #b71c1c);
+    color: #ffd700;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-family: "Russo One", arial, sans-serif;
+    font-size: 16px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+    transition: all 0.3s ease;
+    border: 1px solid #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.home-btn:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(211, 47, 47, 0.6);
+    opacity: 1;
+    color: #fff;
+}
+
 .help-modal {
 	display: flex;
 	justify-content: center;
