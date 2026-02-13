@@ -25,7 +25,7 @@ $( document ).ready(function() {
                 // 跳转到烟花页面，传递相同的数据参数
                 window.location.href = `fireworks/index.html?data=${dataParam}`;
             }
-        }, 3000); // 等待动画完成
+        }, 5000); // 等待动画完成
     }
 
     function close() {
