@@ -89,18 +89,16 @@ function getUrlParam(name) {
 
 // 加载祝福语
 function loadWishes() {
-    const idParam = getUrlParam('id');
-    if (idParam) {
+    const dataParam = getUrlParam('data');
+    if (dataParam) {
         try {
-            const storedData = localStorage.getItem(idParam);
-            if (storedData) {
-                const decodedData = JSON.parse(storedData);
-                if (decodedData.wishes && decodedData.wishes.length > 0) {
-                    randomWords = decodedData.wishes;
-                    
-                    // Start cycling wishes in the overlay
-                    startWishOverlay(randomWords);
-                }
+            // 解码数据
+            const decodedData = JSON.parse(decodeURIComponent(atob(dataParam)));
+            if (decodedData.wishes && decodedData.wishes.length > 0) {
+                randomWords = decodedData.wishes;
+                
+                // Start cycling wishes in the overlay
+                startWishOverlay(randomWords);
             }
         } catch (e) {
             console.error("Error loading wishes:", e);

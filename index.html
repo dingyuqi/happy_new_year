@@ -233,6 +233,19 @@
             font-family: monospace;
         }
 
+        .copy-btn {
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .copy-btn:hover {
+            background: #45a049;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
@@ -305,6 +318,7 @@
         <div id="link-container" class="link-container">
             <p>生成的祝福链接：</p>
             <input type="text" id="generated-link" readonly>
+            <button class="copy-btn" onclick="copyLink()">复制链接</button>
             <p style="margin-top: 10px; font-size: 14px; color: #666;">复制此链接发送给收件人</p>
         </div>
     </div>
@@ -388,16 +402,13 @@
                 };
                 console.log('准备存储的数据:', data);
 
-                // 生成唯一标识符
-                const uniqueId = 'wish_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                console.log('生成的唯一ID:', uniqueId);
-
-                // 存储数据到localStorage
-                localStorage.setItem(uniqueId, JSON.stringify(data));
-                console.log('数据已存储到localStorage');
+                // 将数据编码为 Base64 字符串以包含在 URL 中
+                // 使用 encodeURIComponent 处理中文，防止乱码
+                const encodedData = btoa(encodeURIComponent(JSON.stringify(data)));
+                console.log('编码后的数据:', encodedData);
 
                 // 生成完整的绝对路径，包含协议、域名和端口
-                const link = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace('index.html', '')}envelope.html?id=${uniqueId}`;
+                const link = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace('index.html', '')}envelope.html?data=${encodedData}`;
                 console.log('生成的链接:', link);
 
                 document.getElementById('generated-link').value = link;
@@ -409,6 +420,34 @@
                 alert('生成链接时出错，请稍后再试\n错误信息: ' + error.message);
             }
         });
+        // 复制链接到剪贴板
+        function copyLink() {
+            const linkInput = document.getElementById('generated-link');
+            
+            // 选择文本
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999); // 适配移动设备
+            
+            try {
+                // 执行复制命令
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(linkInput.value).then(() => {
+                        alert('链接已复制到剪贴板！');
+                    }).catch(err => {
+                        console.error('无法复制链接: ', err);
+                        // 回退方案
+                        document.execCommand('copy');
+                        alert('链接已复制到剪贴板！');
+                    });
+                } else {
+                    document.execCommand('copy');
+                    alert('链接已复制到剪贴板！');
+                }
+            } catch (err) {
+                console.error('无法复制链接: ', err);
+                alert('复制失败，请手动复制链接');
+            }
+        }
     </script>
 </body>
 </html>

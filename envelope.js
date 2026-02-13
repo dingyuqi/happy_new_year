@@ -20,15 +20,10 @@ $( document ).ready(function() {
 
         // 等待动画完成后跳转到烟花页面
         setTimeout(() => {
-            const data = loadData();
-            if (data) {
-                console.log('准备传递的数据:', data);
-                // 生成唯一标识符用于传递到烟花页面
-                const uniqueId = 'wish_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                // 存储数据到localStorage
-                localStorage.setItem(uniqueId, JSON.stringify(data));
-                // 跳转到烟花页面
-                window.location.href = `fireworks/index.html?id=${uniqueId}`;
+            const dataParam = getUrlParam('data');
+            if (dataParam) {
+                // 跳转到烟花页面，传递相同的数据参数
+                window.location.href = `fireworks/index.html?data=${dataParam}`;
             }
         }, 3000); // 等待动画完成
     }
@@ -46,49 +41,41 @@ $( document ).ready(function() {
 
     // 加载数据
     function loadData() {
-        const idParam = getUrlParam('id');
-        if (idParam) {
+        const dataParam = getUrlParam('data');
+        if (dataParam) {
             try {
-                console.log('接收到的ID参数:', idParam);
-                // 从localStorage中读取数据
-                const storedData = localStorage.getItem(idParam);
-                if (storedData) {
-                    console.log('从localStorage读取的数据:', storedData);
-                    const decodedData = JSON.parse(storedData);
-                    console.log('解析后的数据:', decodedData);
+                console.log('接收到的数据参数:', dataParam);
+                // 解码数据: Base64 -> URI Component -> JSON String -> Object
+                const decodedData = JSON.parse(decodeURIComponent(atob(dataParam)));
+                console.log('解析后的数据:', decodedData);
 
-                    // Populate data into the lines
-                    const recipientLine = document.getElementById('recipient-line');
-                    const senderLine = document.getElementById('sender-line');
+                // Populate data into the lines
+                const recipientLine = document.getElementById('recipient-line');
+                const senderLine = document.getElementById('sender-line');
 
-                    if (recipientLine) {
-                        recipientLine.textContent = "To: " + decodedData.recipient;
-                        recipientLine.style.lineHeight = "200%"; // Center vertically relative to the line height
-                        recipientLine.style.display = "flex";
-                        recipientLine.style.alignItems = "center";
-                        recipientLine.style.justifyContent = "center";
-                        recipientLine.style.fontSize = "14px";
-                        recipientLine.style.fontWeight = "bold";
-                        recipientLine.style.color = "#000";
-                    }
-                    
-                    if (senderLine) {
-                        senderLine.textContent = "From: " + decodedData.sender;
-                        senderLine.style.lineHeight = "200%";
-                        senderLine.style.display = "flex";
-                        senderLine.style.alignItems = "center";
-                        senderLine.style.justifyContent = "center";
-                        senderLine.style.fontSize = "14px";
-                        senderLine.style.fontWeight = "bold";
-                        senderLine.style.color = "#000";
-                    }
-
-                    return decodedData;
-                } else {
-                    console.error('localStorage中没有找到对应的数据');
-                    alert('链接已过期或无效，请检查是否正确');
-                    return null;
+                if (recipientLine) {
+                    recipientLine.textContent = "To: " + decodedData.recipient;
+                    recipientLine.style.lineHeight = "200%"; // Center vertically relative to the line height
+                    recipientLine.style.display = "flex";
+                    recipientLine.style.alignItems = "center";
+                    recipientLine.style.justifyContent = "center";
+                    recipientLine.style.fontSize = "14px";
+                    recipientLine.style.fontWeight = "bold";
+                    recipientLine.style.color = "#000";
                 }
+                
+                if (senderLine) {
+                    senderLine.textContent = "From: " + decodedData.sender;
+                    senderLine.style.lineHeight = "200%";
+                    senderLine.style.display = "flex";
+                    senderLine.style.alignItems = "center";
+                    senderLine.style.justifyContent = "center";
+                    senderLine.style.fontSize = "14px";
+                    senderLine.style.fontWeight = "bold";
+                    senderLine.style.color = "#000";
+                }
+
+                return decodedData;
             } catch (error) {
                 console.error('数据解析错误:', error);
                 console.error('错误堆栈:', error.stack);
@@ -96,7 +83,8 @@ $( document ).ready(function() {
                 return null;
             }
         } else {
-            alert('链接无效，请检查是否正确');
+            // 如果没有数据，使用默认值或提示
+            console.log('未找到数据参数，使用默认显示');
             return null;
         }
     }
