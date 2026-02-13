@@ -74,6 +74,8 @@ body {
 	align-self: center;
 	text-align: center;
 	text-transform: uppercase;
+    color: #FFD700;
+    text-shadow: 0 0 10px #D32F2F;
 }
 .loading-init__header {
 	font-size: 2.2em;

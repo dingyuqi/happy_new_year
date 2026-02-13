@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #cb2d3e, #ef473a); /* 新年红渐变 */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -23,45 +23,61 @@
         }
 
         .container {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            border-radius: 24px; /* 更大的圆角 */
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15); /* 更柔和的阴影 */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* 微妙的边框 */
             max-width: 600px;
             width: 100%;
             text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 30px;
+            color: #c62828; /* 深红色标题 */
+            margin-bottom: 40px;
             font-size: 2.5em;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: -0.5px;
         }
 
         .form-group {
             margin-bottom: 25px;
             text-align: left;
+            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
+            color: #444; /* 深灰色标签，更现代 */
+            font-weight: 600;
+            font-size: 0.95em;
         }
 
         input[type="text"], textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid #eee; /* 浅灰色边框 */
+            border-radius: 12px; /* 圆角输入框 */
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
         }
 
         input[type="text"]:focus, textarea:focus {
             outline: none;
-            border-color: #4ecdc4;
+            border-color: #ef5350; /* 聚焦时红色 */
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(239, 83, 80, 0.15);
         }
 
         textarea {
@@ -70,99 +86,156 @@
         }
 
         .wishlist {
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .wish-item {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
+            margin-bottom: 12px;
+            padding: 6px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        
+        .wish-item:hover {
+            transform: translateX(2px);
+            border-color: #ffcdd2;
         }
 
         .wish-item input {
             flex: 1;
             margin-right: 10px;
+            border: none;
+            background: transparent;
+            padding: 10px;
+        }
+        
+        .wish-item input:focus {
+            box-shadow: none;
+            background: transparent;
         }
 
         .wish-controls {
             display: flex;
-            gap: 5px;
+            gap: 8px;
+            padding-right: 6px;
         }
 
         button {
             padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            transition: background-color 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
         }
 
         .add-wish {
-            background: #4ecdc4;
-            color: white;
+            background: #fff3e0; /* 浅橙色背景 */
+            color: #ef6c00; /* 深橙色文字 */
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
+            padding: 12px;
+            border: 1px dashed #ffb74d;
         }
 
         .add-wish:hover {
-            background: #45b7aa;
+            background: #ffe0b2;
+            transform: translateY(-1px);
         }
 
         .move-btn {
-            background: #ff6b6b;
-            color: white;
+            background: #f5f5f5;
+            color: #666;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
         .move-btn:hover {
-            background: #ee5a52;
+            background: #e0e0e0;
+            color: #333;
         }
 
         .remove-btn {
-            background: #95a5a6;
-            color: white;
+            background: #ffebee;
+            color: #c62828;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
         .remove-btn:hover {
-            background: #7f8c8d;
+            background: #ffcdd2;
+            transform: scale(1.1);
         }
 
         .send-btn {
-            background: #ff6b6b;
+            background: linear-gradient(135deg, #e53935, #c62828); /* 现代渐变 */
             color: white;
             font-size: 18px;
-            padding: 15px 30px;
-            border-radius: 8px;
-            margin-top: 20px;
+            padding: 16px 32px;
+            border-radius: 50px; /* 胶囊按钮 */
+            margin-top: 30px;
             width: 100%;
+            box-shadow: 0 10px 20px rgba(198, 40, 40, 0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .send-btn:hover {
-            background: #ee5a52;
+            background: linear-gradient(135deg, #ef5350, #d32f2f);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(198, 40, 40, 0.4);
+        }
+        
+        .send-btn:active {
+            transform: translateY(1px);
         }
 
         .link-container {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 8px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 16px;
             display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .link-container input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-top: 15px;
+            background: #f8f9fa;
+            color: #555;
+            font-family: monospace;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 30px 20px;
             }
 
             h1 {
@@ -173,7 +246,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎆 马年祝福烟花 🎆</h1>
+        <h1>马年祝福烟花</h1>
 
         <form id="settings-form">
             <div class="form-group">
