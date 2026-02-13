@@ -71,24 +71,26 @@ $( document ).ready(function() {
 
                 if (recipientLine) {
                     recipientLine.textContent = "To: " + decodedData.recipient;
-                    recipientLine.style.lineHeight = "200%"; // Center vertically relative to the line height
-                    recipientLine.style.display = "flex";
-                    recipientLine.style.alignItems = "center";
-                    recipientLine.style.justifyContent = "center";
-                    recipientLine.style.fontSize = "18px"; // Decreased from 24px
+                    recipientLine.style.lineHeight = "1.2"; // Adjusted line height
+                    recipientLine.style.display = "block"; // Changed to block to support wrapping
+                    recipientLine.style.textAlign = "center";
+                    recipientLine.style.fontSize = "18px";
                     recipientLine.style.fontWeight = "bold";
                     recipientLine.style.color = "#000";
+                    recipientLine.style.width = "100%";
+                    recipientLine.style.wordWrap = "break-word"; // Enable wrapping
                 }
                 
                 if (senderLine) {
                     senderLine.textContent = "From: " + decodedData.sender;
-                    senderLine.style.lineHeight = "200%";
-                    senderLine.style.display = "flex";
-                    senderLine.style.alignItems = "center";
-                    senderLine.style.justifyContent = "center";
-                    senderLine.style.fontSize = "18px"; // Decreased from 24px
+                    senderLine.style.lineHeight = "1.2";
+                    senderLine.style.display = "block";
+                    senderLine.style.textAlign = "center";
+                    senderLine.style.fontSize = "18px";
                     senderLine.style.fontWeight = "bold";
                     senderLine.style.color = "#000";
+                    senderLine.style.width = "100%";
+                    senderLine.style.wordWrap = "break-word";
                 }
 
                 return decodedData;

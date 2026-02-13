@@ -38,15 +38,28 @@
 }
 
 .letter {
-  position: relative;
-  background-color: #fff;
+  position: absolute;
+  background-color: #fffdf0;
   width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 5%;
   height: 90%;
   top: 5%;
   border-radius: 6px;
   box-shadow: 0 2px 26px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.letter-content {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .letter:after {
@@ -56,32 +69,23 @@
   bottom: 0;
   left: 0;
   right: 0;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 25%, #ffd700 25%, #ffd700 27%, rgba(255, 255, 255, 0) 27%, rgba(255, 255, 255, 0) 74%, #ffd700 74%, #ffd700 76%, rgba(255, 255, 255, 0) 76%); /* 金色线条装饰 */
+  pointer-events: none; /* 确保不影响点击 */
+  opacity: 0.2;
 }
 
 .words {
-  position: absolute;
-  left: 10%;
-  width: 80%;
-  height: 14%;
-}
-
-.words.line1 {
-  top: 15%;
-  width: 20%;
-  height: 7%;
-}
-
-.words.line2 {
-  top: 30%;
+  width: 100%;
   text-align: center;
+  word-wrap: break-word; /* 允许长单词换行 */
+  white-space: normal;   /* 允许文本换行 */
+  line-height: 1.2;      /* 紧凑的行高 */
+  margin: 2px 0;
 }
 
-.words.line3 {
-  top: 50%;
-}
-
-.words.line4 {
-  top: 70%;
+.words.line1, .words.line2, .words.line3, .words.line4 {
+  background-color: transparent; /* 移除原来的背景线 */
+  height: auto; /* 高度自适应 */
 }
 
 .open .flap {
@@ -103,9 +107,9 @@
 }
 
 .open .letter {
-  transform: translateY(-200px);
-  transition: transform 0.4s 0.6s ease, z-index 0.6s;
+  transform: translateY(-150px); /* Increased from -60px */
   z-index: 2;
+  transition: transform 0.4s 0.6s ease, z-index 0.6s;
 }
 
 .hearts {
@@ -268,7 +272,7 @@ body {
 @media (max-width: 480px) {
   .envlope-wrapper {
     margin-top: 30px;
-    transform: scale(1.0);
+    transform: scale(1.2); /* Increased from 1.0 */
   }
   
   .reset button {
