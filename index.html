@@ -323,6 +323,7 @@
         </div>
     </div>
 
+    <script src="js/lz-string.js"></script>
     <script>
         // 添加祝福语
         function addWish() {
@@ -402,10 +403,9 @@
                 };
                 console.log('准备存储的数据:', data);
 
-                // 将数据编码为 Base64 字符串以包含在 URL 中
-                // 使用 encodeURIComponent 处理中文，防止乱码
-                const encodedData = btoa(encodeURIComponent(JSON.stringify(data)));
-                console.log('编码后的数据:', encodedData);
+                // 使用 LZString 压缩数据
+                const encodedData = LZString.compressToEncodedURIComponent(JSON.stringify(data));
+                console.log('压缩后的数据:', encodedData);
 
                 // 生成完整的绝对路径，包含协议、域名和端口
                 const link = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace('index.html', '')}envelope.html?data=${encodedData}`;

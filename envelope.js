@@ -45,9 +45,25 @@ $( document ).ready(function() {
         if (dataParam) {
             try {
                 console.log('接收到的数据参数:', dataParam);
-                // 解码数据: Base64 -> URI Component -> JSON String -> Object
-                const decodedData = JSON.parse(decodeURIComponent(atob(dataParam)));
+                // 解码数据: LZString 解压
+                let decodedData = null;
+                
+                // 尝试 LZString 解压
+                const decompressed = LZString.decompressFromEncodedURIComponent(dataParam);
+                if (decompressed) {
+                    decodedData = JSON.parse(decompressed);
+                } else {
+                    // 回退到旧的 Base64 解码 (为了兼容旧链接)
+                    try {
+                        decodedData = JSON.parse(decodeURIComponent(atob(dataParam)));
+                    } catch (e) {
+                        console.log('不是Base64格式，可能是压缩数据损坏');
+                    }
+                }
+                
                 console.log('解析后的数据:', decodedData);
+
+                if (!decodedData) throw new Error('无法解析数据');
 
                 // Populate data into the lines
                 const recipientLine = document.getElementById('recipient-line');

@@ -92,9 +92,23 @@ function loadWishes() {
     const dataParam = getUrlParam('data');
     if (dataParam) {
         try {
-            // 解码数据
-            const decodedData = JSON.parse(decodeURIComponent(atob(dataParam)));
-            if (decodedData.wishes && decodedData.wishes.length > 0) {
+            // 解码数据: LZString 解压
+            let decodedData = null;
+            
+            // 尝试 LZString 解压
+            const decompressed = LZString.decompressFromEncodedURIComponent(dataParam);
+            if (decompressed) {
+                decodedData = JSON.parse(decompressed);
+            } else {
+                // 回退到旧的 Base64 解码
+                try {
+                    decodedData = JSON.parse(decodeURIComponent(atob(dataParam)));
+                } catch (e) {
+                    console.log('不是Base64格式，可能是压缩数据损坏');
+                }
+            }
+
+            if (decodedData && decodedData.wishes && decodedData.wishes.length > 0) {
                 randomWords = decodedData.wishes;
                 
                 // Start cycling wishes in the overlay
