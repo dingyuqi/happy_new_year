@@ -75,7 +75,7 @@ $( document ).ready(function() {
                     recipientLine.style.display = "flex";
                     recipientLine.style.alignItems = "center";
                     recipientLine.style.justifyContent = "center";
-                    recipientLine.style.fontSize = "18px"; // Increased from 14px
+                    recipientLine.style.fontSize = "24px"; // Increased from 18px
                     recipientLine.style.fontWeight = "bold";
                     recipientLine.style.color = "#000";
                 }
@@ -86,7 +86,7 @@ $( document ).ready(function() {
                     senderLine.style.display = "flex";
                     senderLine.style.alignItems = "center";
                     senderLine.style.justifyContent = "center";
-                    senderLine.style.fontSize = "18px"; // Increased from 14px
+                    senderLine.style.fontSize = "24px"; // Increased from 18px
                     senderLine.style.fontWeight = "bold";
                     senderLine.style.color = "#000";
                 }
